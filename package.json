@@ -1,0 +1,11 @@
+{
+  "name": "rh-shortener",
+  "version": "1.0.0",
+  "description": "Shortlinks for RoutineHub, now with real HTTP redirects instead of client-side JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "FifiTheBulldog",
+  "license": "MIT"
+}
