@@ -1,4 +1,21 @@
-var http = require("http");
+const http = require("http");
+
+const { readFileSync } = require('fs');
+const indexPage = readFileSync("./index.html");
+const errorPage = readFileSync("./404.html");
+
+const pages = {
+    b: "blog",
+    c: "changelog",
+    h: "",
+    k: "cookies",
+    l: "login",
+    m: "membership",
+    p: "privacy",
+    q: "faq",
+    r: "register",
+    t: "terms"
+}
 
 function redirect(res, url, other) {
     if (!other) {
@@ -11,56 +28,40 @@ function redirect(res, url, other) {
     res.end();
 }
 
-http.createServer(function(req, res) {
+function serveFile(res, file) {
+    res.write(file);
+    res.end();
+}
+
+http.createServer((req, res) => {
     const pathname = req.url;
     const type = pathname.charAt(1);
     const itemValue = pathname.substr(2);
 
-    if (type === "") {
-        // Serve index.html
-    } else {
-        switch (type) {
-            case "u":
-                redirect(res, `user/${itemValue}`);
-                break;
-            case "s":
-                redirect(res, `shortcut/${itemValue}`);
-                break;
-            case "c":
-                redirect(res, `shortcut/${itemValue}/changelog`);
-                break;
-            case "h":
-                redirect(res, "");
-                break;
-            case "r":
-                redirect(res, "register");
-                break;
-            case "l":
-                redirect(res, "login");
-                break;
-            case "m":
-                redirect(res, "membership");
-                break;
-            case "q":
-                redirect(res, "faq");
-                break;
-            case "b":
-                redirect(res, "blog");
-                break;
-            case "t":
-                redirect(res, "terms");
-                break;
-            case "p":
-                redirect(res, "privacy");
-                break;
-            case "k":
-                redirect(res, "cookies");
-                break;
-            case "f":
-                redirect(res, "https://feedback.routinehub.co", true);
-                break;
-            default: // Change this to redirect to 404 page
-                redirect(res, "https://example.com", true);
-        }
+    switch (type) {
+        case "u":
+            redirect(res, rh + "user/" + itemValue);
+            break;
+        case "s":
+            let after = itemValue;
+            if (itemValue.charAt(itemValue.length - 1) === "c") {
+                after = itemValue.slice(0, -1) + "/changelog";
+            }
+            redirect(res, rh + "shortcut/" + after)
+            break;
+        case "f":
+            redirect(res, "https://feedback.routinehub.co", true);
+            break;
+        case "":
+            serveFile(res, indexPage);
+            break;
+        default:
+            const rhPath = pages[type];
+            if (rhPath === undefined) {
+                res.statusCode = 404;
+                serveFile(res, errorPage);
+            } else {
+                redirect(res, rh + rhPath);
+            }
     }
-}).listen(3000);
+}).listen(process.env.PORT || 3000);

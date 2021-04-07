@@ -4,7 +4,7 @@
   "description": "Shortlinks for RoutineHub, now with real HTTP redirects instead of client-side JavaScript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "FifiTheBulldog",
   "license": "MIT"
