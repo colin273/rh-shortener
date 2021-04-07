@@ -1,7 +1,7 @@
 {
   "name": "rh-shortener",
   "version": "1.0.0",
-  "description": "Shortlinks for RoutineHub, now with real HTTP redirects instead of client-side JavaScript",
+  "description": "A URL shortener for RoutineHub",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

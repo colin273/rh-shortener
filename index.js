@@ -28,11 +28,6 @@ function redirect(res, url, other) {
     res.end();
 }
 
-function serveFile(res, file) {
-    res.write(file);
-    res.end();
-}
-
 http.createServer((req, res) => {
     const pathname = req.url;
     const type = pathname.charAt(1);
@@ -40,28 +35,28 @@ http.createServer((req, res) => {
 
     switch (type) {
         case "u":
-            redirect(res, rh + "user/" + itemValue);
+            redirect(res, "user/" + itemValue);
             break;
         case "s":
             let after = itemValue;
             if (itemValue.charAt(itemValue.length - 1) === "c") {
                 after = itemValue.slice(0, -1) + "/changelog";
             }
-            redirect(res, rh + "shortcut/" + after)
+            redirect(res, "shortcut/" + after)
             break;
         case "f":
             redirect(res, "https://feedback.routinehub.co", true);
             break;
         case "":
-            serveFile(res, indexPage);
+            res.end(indexPage);
             break;
         default:
             const rhPath = pages[type];
             if (rhPath === undefined) {
                 res.statusCode = 404;
-                serveFile(res, errorPage);
+                res.end(errorPage);
             } else {
-                redirect(res, rh + rhPath);
+                redirect(res, rhPath);
             }
     }
 }).listen(process.env.PORT || 3000);
